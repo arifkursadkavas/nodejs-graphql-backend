@@ -1,0 +1,20 @@
+{
+  "name": "nodejs_graphql_api",
+  "version": "1.0.0",
+  "description": "A nodejs backend with graphql",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "graphql",
+    "postgresql"
+  ],
+  "author": "Arif Kürsad KAVAS",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^2.18.2",
+    "express": "^4.17.1"
+  }
+}
