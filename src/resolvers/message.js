@@ -2,20 +2,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default {
     Query: { 
-      books: (parent,{},{models}) => Object.values(models.books), 
-      book:(parent,{id},{models}) => {
-        return models.books[id];
-      },
-      users: (parent,{},{models}) => Object.values(models.users), 
-      user:(parent,{id},{models}) => {
-        return models.users[id];
-      },
       messages: (parent,{},{models}) => Object.values(models.messages), 
       message: async(parent,{id},{models}) => {
         await wait(1000);
         return models.messages[id];
-      },
-      me: (parent, args, {me}) => {return me}
+      }
    },
 
    Mutation:{
@@ -40,12 +31,6 @@ export default {
 
        models.messages= otherMessages;
        return true;
-     }
-   },
-
-   User:{
-     messages: (user, {  }, { models }) => {
-       return Object.values(models.messages).filter(t => t.userId === user.id);
      }
    },
 
