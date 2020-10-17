@@ -7,12 +7,15 @@ import 'dotenv/config';
 import schema from './schema';
 import resolvers from './resolvers';
 import models, {sequelize} from './models';
+import { seedDb } from './seed';
 
+const eraseDbOnSync = true;
 
-
-function wait(ms) {
-    return new Promise(r => setTimeout(r, ms));
-}
+sequelize.sync({force:eraseDbOnSync}).then(async () => {
+  if(eraseDbOnSync){
+    seedDb();
+  }
+})
   
 
 const server = new ApolloServer({
