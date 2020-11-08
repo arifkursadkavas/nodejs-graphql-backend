@@ -8,22 +8,23 @@ import schema from './schema';
 import resolvers from './resolvers';
 import models, {sequelize} from './models';
 import { seedDb } from './seed';
+import { getMe } from './services/identityService';
 
-const eraseDbOnSync = true;
+const eraseDbOnSync = false;
 
 sequelize.sync({force:eraseDbOnSync}).then(async () => {
   if(eraseDbOnSync){
     seedDb();
   }
-})
-  
+});
 
 const server = new ApolloServer({
   typeDefs:schema,
    resolvers,
-   context:{
-     models
-   }
+   context: async () => ({
+     models,
+     me: await getMe('arif'),
+   })
   }
   );
 

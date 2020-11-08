@@ -17,7 +17,7 @@ export default {
 
    User:{
      messages: async (user, args, { models }) => {
-        return await models.Message.findByPk({
+        return await models.Message.findAll({
           where:{
             userId: user.id,
           }
