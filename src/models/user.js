@@ -5,7 +5,10 @@ const user = (sequelize, DataTypes) => {
             unique:true,
             allowNull: false,
             validate:{
-                notEmpty:true
+                notEmpty:{
+                    args:true,
+                    msg:'Username field cannot be empty',
+                }
             }
         },
        //email:{

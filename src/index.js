@@ -21,6 +21,18 @@ sequelize.sync({force:eraseDbOnSync}).then(async () => {
 const server = new ApolloServer({
   typeDefs:schema,
    resolvers,
+   //formatError: error => {
+   //  // remove the internal sequelize error message
+   //  // leave only the important validation error
+   //  const message = error.message
+   //    .replace('SequelizeValidationError: ', '')
+   //    .replace('Validation error: ', '');
+   //
+   //  return {
+   //    ...error,
+   //    message,
+   //  };
+   //},
    context: async () => ({
      models,
      me: await getMe('arif'),
