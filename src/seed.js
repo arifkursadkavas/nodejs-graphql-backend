@@ -2,12 +2,14 @@ import models from './models/index'
 
 export const seedDb = async () => {
     await models.User.create({
-        username:'arif',
-        messages:[
-            {
-                text: 'Hey there Janis'
-            }
-        ]
+            username:'arif',
+            email: 'arif@arif.com',
+                password: 'arifarif',
+            messages:[
+                {
+                    text: 'Hey there Janis'
+                }
+            ]
     },
     {
         include: [models.Message]
@@ -15,6 +17,8 @@ export const seedDb = async () => {
 
     await models.User.create({
         username:'kursad',
+        email: 'kursad@kursad.com',
+            password: 'kursadkursad',
         messages:[
             {
                 text: 'Hey there Grace'

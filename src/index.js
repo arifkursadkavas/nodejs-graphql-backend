@@ -36,6 +36,7 @@ const server = new ApolloServer({
    context: async () => ({
      models,
      me: await getMe('arif'),
+     secret: process.env.SECRET,
    })
   }
   );
