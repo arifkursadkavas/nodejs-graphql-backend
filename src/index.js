@@ -1,14 +1,14 @@
 import cors from 'cors';
 import express from 'express';
-import  {ApolloServer} from 'apollo-server-express';
+import  {ApolloServer,AuthenticationError} from 'apollo-server-express';
 
 import 'dotenv/config';
+import jwt from 'jsonwebtoken';
 
 import schema from './schema';
 import resolvers from './resolvers';
 import models, {sequelize} from './models';
 import { seedDb } from './seed';
-import { getMe } from './services/identityService';
 
 const eraseDbOnSync = false;
 
@@ -17,6 +17,18 @@ sequelize.sync({force:eraseDbOnSync}).then(async () => {
     seedDb();
   }
 });
+
+const getMe = async req => {
+  const token = req.headers['x-token'];
+
+  if(token){
+    try{
+      return await jwt.verify(token, process.env.SECRET);
+    }catch(e){
+      throw new AuthenticationError('Your session expired, Login again plesae');
+    }
+  }
+}
 
 const server = new ApolloServer({
   typeDefs:schema,
@@ -33,13 +45,17 @@ const server = new ApolloServer({
    //    message,
    //  };
    //},
-   context: async () => ({
+   context: async ({req}) => {
+     const me = await getMe(req);
+     
+     return {
      models,
-     me: await getMe('arif'),
-     secret: process.env.SECRET,
-   })
-  }
-  );
+     me: me,
+     secret: process.env.SECRET
+     }
+   }
+  
+});
 
 const app = express();
 app.use(cors());

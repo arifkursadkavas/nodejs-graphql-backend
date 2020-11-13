@@ -30,8 +30,22 @@ const user = (sequelize, DataTypes) => {
                    len: [7, 42]
                }
            }
-       })
+        });
 
+    User.findByLogin = async login => {
+        let user = await User.findOne({
+            where: { username: login },
+        });
+ 
+        if (!user) {
+            user = await User.findOne({
+                where: { email: login },
+            });
+        }
+ 
+        return user;
+    };
+    
     User.associate = models => {
         User.hasMany(models.Message, {onDelete: 'CASCADE'});
     };
@@ -43,6 +57,10 @@ const user = (sequelize, DataTypes) => {
     User.prototype.hashPassword = async function () {
         const saltRounds = 10;
         return await bcrypt.hash(this.password,saltRounds);
+    }
+
+    User.prototype.validatePassword = async function (password) {
+        return await bcrypt.compare(password, this.password);
     }
 
     return User;
