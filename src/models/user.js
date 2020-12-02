@@ -22,14 +22,19 @@ const user = (sequelize, DataTypes) => {
                    isEmail: true
                }
            },
-           password: {
+        password: {
                type: DataTypes.STRING,
                allowNull: false,
                validate: {
                    notEmpty: true,
                    len: [7, 42]
                }
-           }
+           },
+        
+        role: {
+            type: DataTypes.STRING,
+        }
+
         });
 
     User.findByLogin = async login => {

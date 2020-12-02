@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { AuthenticationError, UserInputError } from 'apollo-server';
+import { isAdmin } from './authorization';
 
 const createToken = async (user,secret, expiresIn) => {
- const {id, email, username} = user;
- return jwt.sign({id, email, username},secret, {expiresIn});
+ const {id, email, username, role} = user;
+ return jwt.sign({id, email, username,role},secret, {expiresIn});
 };
 
 export default {
@@ -43,8 +44,17 @@ export default {
           throw new AuthenticationError('This pair of credentials did not work')
         }
 
-        return  {token: createToken(user,secret, 60)};
+        return  {token: createToken(user,secret, 600)};
      },
+
+     deleteUser: combineResolvers(
+       isAdmin, 
+       async (parent, {id}, {models}) =>{
+        return await models.User.destroy({
+          where: {id}
+        });
+     }),
+
    },
 
 

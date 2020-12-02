@@ -9,7 +9,8 @@ export const seedDb = async () => {
                 {
                     text: 'Hey there Janis'
                 }
-            ]
+            ],
+            role: 'ADMIN'
     },
     {
         include: [models.Message]
