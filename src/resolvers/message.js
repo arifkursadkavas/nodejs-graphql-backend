@@ -1,10 +1,33 @@
 import { combineResolvers } from "graphql-resolvers";
+import { Sequelize } from "sequelize";
 import { isAuthenticated, isMessageOwner } from "./authorization";
 
 export default {
     Query: { 
-      messages: async (parent,args,{models}) => {
-        return await models.Message.findAll();
+      messages: async (parent,{cursor, limit=100},{models}) => {
+        const cursorOptions = cursor ? 
+        {
+          where:{
+            createdAt:{[Sequelize.Op.lt]: cursor}
+          }
+        } : null;
+
+        const messages = await models.Message.findAll({
+          order:[['createdAt', 'DESC']],
+          limit: limit+1,
+          ...cursorOptions
+        });
+
+        const hasNextPage = messages.length > limit;
+        const edges = hasNextPage ? messages.slice  (0, -1) : messages;
+
+        return {
+          edges,
+          pageInfo:{
+            hasNextPage,
+            endCursor: messages[messages.length -1].createdAt,
+          }
+        }
       }, 
       
       message: async (parent,{id},{models}) => {
