@@ -1,13 +1,14 @@
 import models from './models/index'
 
-export const seedDb = async () => {
+export const seedDb = async (date) => {
     await models.User.create({
             username:'arif',
             email: 'arif@arif.com',
                 password: 'arifarif',
             messages:[
                 {
-                    text: 'Hey there Janis'
+                    text: 'Hey there Janis',
+                    createdAt: date.setSeconds(date.getSeconds() + 1)
                 }
             ],
             role: 'ADMIN'
@@ -22,7 +23,12 @@ export const seedDb = async () => {
             password: 'kursadkursad',
         messages:[
             {
-                text: 'Hey there Grace'
+                text: 'Hey there Grace',
+                createdAt: date.setSeconds(date.getSeconds() + 1)
+            },
+            {
+                text: 'Hey there Alice',
+                createdAt: date.setSeconds(date.getSeconds() + 1)
             }
         ]
     },

@@ -14,7 +14,7 @@ const eraseDbOnSync = false;
 
 sequelize.sync({force:eraseDbOnSync}).then(async () => {
   if(eraseDbOnSync){
-    seedDb();
+    seedDb(new Date());
   }
 });
 
