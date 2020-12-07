@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from 'express';
+import http from 'http';
 import  {ApolloServer,AuthenticationError} from 'apollo-server-express';
 
 import 'dotenv/config';
@@ -12,11 +13,6 @@ import { seedDb } from './seed';
 
 const eraseDbOnSync = false;
 
-sequelize.sync({force:eraseDbOnSync}).then(async () => {
-  if(eraseDbOnSync){
-    seedDb(new Date());
-  }
-});
 
 const getMe = async req => {
   const token = req.headers['x-token'];
@@ -45,22 +41,40 @@ const server = new ApolloServer({
    //    message,
    //  };
    //},
-   context: async ({req}) => {
+   context: async ({req, connection}) => {
+
+    if(connection){
+      return {
+        models
+      };
+    }
+
+    if(req){
      const me = await getMe(req);
-     
      return {
-     models,
-     me: me,
-     secret: process.env.SECRET
+       models,
+       me: me,
+       secret: process.env.SECRET
      }
+    }
+
    }
-  
 });
 
 const app = express();
 app.use(cors());
 server.applyMiddleware({app, path: '/graphql'});
 
-sequelize.sync().then(async () => {
-  app.listen({port:4000}, () => console.log('App is served here: http://localhost:4000'))
-})
+const httpServer =  http.createServer(app);
+server.installSubscriptionHandlers(httpServer);
+
+sequelize.sync({force:eraseDbOnSync}).then(async () => {
+  if(eraseDbOnSync){
+    seedDb(new Date()); 
+  }
+  httpServer.listen({port: 4000}, () => console.log('App is served here: http://localhost:4000'));
+});
+
+//sequelize.sync().then(async () => { 
+//  app.listen({port:4000}, () => console.log('App is served here: http://localhost:4000'))
+//});
