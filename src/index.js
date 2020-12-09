@@ -11,8 +11,9 @@ import resolvers from './resolvers';
 import models, {sequelize} from './models';
 import { seedDb } from './seed';
 
-const eraseDbOnSync = false;
+const eraseDbOnSync = true;
 
+const isTest = !!process.env.TEST_DATABASE;
 
 const getMe = async req => {
   const token = req.headers['x-token'];
@@ -68,8 +69,8 @@ server.applyMiddleware({app, path: '/graphql'});
 const httpServer =  http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
-sequelize.sync({force:eraseDbOnSync}).then(async () => {
-  if(eraseDbOnSync){
+sequelize.sync({force: isTest}).then(async () => {
+  if(isTest){
     seedDb(new Date()); 
   }
   httpServer.listen({port: 4000}, () => console.log('App is served here: http://localhost:4000'));
