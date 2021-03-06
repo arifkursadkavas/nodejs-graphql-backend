@@ -13,7 +13,7 @@ import { seedDb } from './seed';
 
 const eraseDbOnSync = true;
 
-const isTest = !!process.env.TEST_DATABASE;
+const isTest = !!process.env.TEST_DB;
 
 const getMe = async req => {
   const token = req.headers['x-token'];

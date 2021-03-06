@@ -2,6 +2,13 @@ import { expect } from "chai";
 import * as userApi from './api';
 
 describe('users', () => {
+
+    describe('user', () => {
+        it('user is user', () => {
+            expect('user').to.eql('user');
+        })
+    })
+    
     describe('user(id:String!): User', () => {
         it('returns a user if a user is found', async () => {
             const expectedResult = {
